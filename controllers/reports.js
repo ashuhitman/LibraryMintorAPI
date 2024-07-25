@@ -2,10 +2,9 @@ import pool, { config } from "../db/config.js";
 import { getCurrentTime } from "../utils/utils.js";
 
 // Function to get users
-export async function getReports() {
+export async function getReports(date) {
   try {
-    const today = new Date();
-    const date = today.toISOString().split("T")[0];
+    date = date.split("T")[0];
 
     // Query the database
     const [rows] = await pool.query(
@@ -20,18 +19,13 @@ export async function getReports() {
   }
 }
 // check in or check out the user
-export async function checkInOut(barcode) {
-  const today = new Date();
-  const date = today.toISOString().split("T")[0];
-  const time = getCurrentTime(today);
-
+export async function checkInOut(barcode, date, time) {
   try {
     // Check if the barcode exists for the given date
     const [rows] = await pool.query(
       "SELECT * FROM reports WHERE barcode = ? AND created_date = ? AND status=?",
       [barcode, date, 1]
     );
-    console.log(rows, rows.length);
 
     if (rows.length === 0) {
       // No record exists, perform check-in
@@ -39,7 +33,7 @@ export async function checkInOut(barcode) {
         "INSERT INTO reports (barcode,checkin,checkout, created_date, status) VALUES (?, ?,?, ?,?)",
         [barcode, time, null, date, 1]
       );
-      console.log(result);
+
       return {
         user_status: "in",
         message: "Checked in successfully",
@@ -87,15 +81,14 @@ export async function getReportsByDate(startDate, endDate) {
 
 // get count of checked in and checked out
 
-export async function getSummary() {
+export async function getSummary(date) {
   try {
     // get today date
-    const today = new Date();
-    const date = today.toISOString().split("T")[0];
 
     const sql =
       "SELECT SUM(CASE WHEN status = 1 THEN 1 ELSE 0 END) AS checkedInCount, SUM(CASE WHEN status = 0 THEN 1 ELSE 0 END) AS checkedOutCount FROM reports WHERE created_date = ?";
     const [rows] = await pool.query(sql, [date]);
+    console.log(rows, date);
     return rows;
     // get count where checked in and checked out
   } catch (error) {

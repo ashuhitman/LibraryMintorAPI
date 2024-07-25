@@ -9,7 +9,7 @@ import {
 const router = Router();
 
 router.get("/", async (req, res) => {
-  const { startDate, endDate } = req.query;
+  const { startDate, endDate, date } = req.query;
 
   try {
     let reports;
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
       reports = await getReportsByDate(startDate, endDate);
       today = false;
     } else {
-      reports = await getReports();
+      reports = await getReports(date);
     }
     if (reports.length > 0)
       return res.send({
@@ -35,7 +35,9 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const reports = await checkInOut(req.body.barcode);
+    console.log(req.body);
+    const { barcode, date, time } = req.body;
+    const reports = await checkInOut(barcode, date, time);
     res.status(201).send(reports);
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -45,7 +47,9 @@ router.post("/", async (req, res) => {
 
 router.get("/summary", async (req, res) => {
   try {
-    const summary = await getSummary();
+    const { date } = req.query;
+    const summary = await getSummary(date);
+
     if (summary.length > 0)
       return res.status(200).send({
         summary: summary[0],
