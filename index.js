@@ -20,6 +20,13 @@ app.use(
 );
 app.use(express.json({ limit: "30mb", extended: true }));
 app.use(express.urlencoded({ limit: "30mb", extended: true }));
+
+// Handle preflight requests
+app.options("*", cors());
+// welcom
+app.get("/", (req, res) =>
+  res.send({ message: "Welcome to library user tracker api" })
+);
 //routes
 app.use("/auth", authRouter);
 app.use("/reports", reportsRouter);
@@ -28,10 +35,6 @@ app.use("/libraryinfo", libraryInfoRouter);
 //port number
 const PORT = process.env.PORT;
 
-// welcom
-app.get("/", (req, res) =>
-  res.send({ message: "Welcome to library user tracker api" })
-);
 //start the server
 app.listen(PORT, () => {
   console.log(`server listening on ${PORT}`);

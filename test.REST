@@ -26,7 +26,7 @@ Content-Type: application/json
   "id":1,
   "institution_name": "NCERT Mysoor Library",
   "library_name": "New Library Name",
-  "total_seats": 600
+  "total_seats": 700
 }
 
 
