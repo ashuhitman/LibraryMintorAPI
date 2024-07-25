@@ -13,7 +13,7 @@ const app = express();
 // cors
 app.use(
   cors({
-    origin: ["http://localhost:5173"],
+    origin: ["http://localhost:5173", "https://libraryusertracker.netlify.app"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   })
@@ -28,6 +28,10 @@ app.use("/libraryinfo", libraryInfoRouter);
 //port number
 const PORT = process.env.PORT;
 
+// welcom
+app.get("/", (req, res) =>
+  res.send({ message: "Welcome to library user tracker api" })
+);
 //start the server
 app.listen(PORT, () => {
   console.log(`server listening on ${PORT}`);
