@@ -1,0 +1,33 @@
+### Fetch reports
+GET http://localhost:8000/reports
+
+### summary 
+GET http://localhost:8000/reports/summary
+
+### Fetch reports
+POST http://localhost:8000/reports
+Content-Type: application/json
+
+{
+  "barcode": "16"
+}
+
+### fetch by date
+GET http://localhost:8000/reports?startDate=2024-07-17&endDate=2024-07-25
+
+### fetch library info 
+GET http://localhost:8000/libraryinfo
+
+### update library info 
+POST http://localhost:8000/libraryinfo
+Content-Type: application/json
+
+{
+  "id":1,
+  "institution_name": "NCERT Mysoor Library",
+  "library_name": "New Library Name",
+  "total_seats": 600
+}
+
+
+
